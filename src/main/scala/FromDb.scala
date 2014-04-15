@@ -1,5 +1,4 @@
 import java.sql.{ResultSet, Connection}
-import scala.io.Source
 import scalaz.concurrent.Task
 import scalaz.stream.Process._
 import scalaz.stream.io._

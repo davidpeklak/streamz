@@ -5,7 +5,14 @@ case class Instrument(
                        sicovam: Int,
                        theType: Option[String],
                        notional: Option[Double]
-                       )
+                       ) {
+  override def toString: String = {
+    "Instrument(" +
+    YELLOW + sicovam.toString + NORMAL + ", " +
+    theType.getOrElse("None") + ", " +
+    notional.getOrElse("None") + ")"
+  }
+}
 
 object Instrument {
   def fromString(s: String): Instrument = {
