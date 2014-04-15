@@ -1,4 +1,5 @@
 import java.io.InputStream
+import java.sql.ResultSet
 import scala.util.Try
 
 object Util {
@@ -15,4 +16,21 @@ object Util {
   def emptyToNone(s: String): Option[String] = if (s.isEmpty) None else Some(s)
 
   def inputStream(path: String): InputStream =  Try { this.getClass.getResourceAsStream(path) }.getOrElse(new java.io.FileInputStream(path))
+
+  implicit class RichResultSet(rs: ResultSet) {
+    private def getOpt[T](f: ResultSet => T): Option[T] = {
+      val t = f(rs)
+      val n = rs.wasNull()
+      if (n) None
+      else Some(t)
+    }
+
+    def getOptDouble(columnLabel: String): Option[Double] = getOpt[Double](rs => rs.getDouble(columnLabel))
+
+    def getOptString(columnLabel: String): Option[String] = Option(rs.getString(columnLabel))
+
+    def getOptInt(columnLabel: String): Option[Int] = getOpt[Int](rs => rs.getInt(columnLabel))
+
+    def getOptLong(columnLabel: String): Option[Long] = getOpt[Long](rs => rs.getLong(columnLabel))
+  }
 }

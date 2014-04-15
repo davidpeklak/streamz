@@ -1,3 +1,4 @@
+import java.sql.ResultSet
 import Util._
 
 case class Instrument(

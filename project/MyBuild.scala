@@ -7,9 +7,11 @@ object MyBuild extends Build {
 
   lazy val proj = Project(id = "smt-regreport",
     base = new File("."),
-    settings = Project.defaultSettings ++ SMT.globalSmtSettings ++ inConfig(dev)(SMT.smtSettings)
+    settings = Project.defaultSettings ++ SMT.globalSmtSettings ++ inConfig(dev1)(SMT.smtSettings) ++ inConfig(dev2)(SMT.smtSettings)
   )
 
-  lazy val dev = config("dev")
+  lazy val dev1 = config("dev1")
+
+  lazy val dev2 = config("dev2")
 
 }

@@ -8,9 +8,14 @@ libraryDependencies ++= Seq(
   "org.scalaz.stream" %% "scalaz-stream" % "0.3.1"
 )
 
-database in dev := new H2Database({
+database in dev1 := new H2Database({
   Class.forName("org.h2.Driver")
   java.sql.DriverManager.getConnection("jdbc:h2:~/test_dev")
+})
+
+database in dev2 := new H2Database({
+  Class.forName("org.h2.Driver")
+  java.sql.DriverManager.getConnection("jdbc:h2:~/test_dev2")
 })
 
 migrations <<= (migrationsSource) map ( m => Seq(
@@ -18,6 +23,10 @@ migrations <<= (migrationsSource) map ( m => Seq(
   SepSchemaMigration("|||", "setupTables", m / "setupTables")
 ))
 
-transformations in dev := Seq()
+transformations in dev1 := Seq()
 
-allowRollback in dev := true
+allowRollback in dev1 := true
+
+transformations in dev2 := Seq()
+
+allowRollback in dev2 := true

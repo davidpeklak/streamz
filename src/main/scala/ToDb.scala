@@ -7,12 +7,7 @@ import scalaz.stream.Process
 import Util._
 
 object ToDb {
-  import FromFile.readInstr
-
-  def createConnection: Connection = {
-    Class.forName("org.h2.Driver")
-    java.sql.DriverManager.getConnection("jdbc:h2:~/test_dev")
-  }
+  import FromFile.read
 
   def writeInstrument(c: Connection, i: Instrument) {
     val ps = c.prepareStatement("insert into INSTR (SICOVAM, TYPE_, NOTIONAL) values (?, ?, ?)")
@@ -22,6 +17,9 @@ object ToDb {
       case Some(n) => ps.setDouble(3, n)
       case None => ps.setNull(3, java.sql.Types.DOUBLE)
     }
+
+    ps.execute()
+    ps.close()
   }
 
   def writeDb(cc: () => Connection): Sink[Task, Instrument] = resource{
@@ -32,5 +30,6 @@ object ToDb {
     c => Task.now(i => Task.delay(writeInstrument(c, i)))
   }
 
-  val pr = readInstr.map(Instrument.fromString) to writeDb(createConnection _)
+  val pr1 = read("Instr1.txt").map(Instrument.fromString) to writeDb(Db1.connect _)
+  val pr2 = read("Instr2.txt").map(Instrument.fromString) to writeDb(Db2.connect _)
 }
