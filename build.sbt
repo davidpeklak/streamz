@@ -3,6 +3,7 @@ import smt._
 resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases"
 
 libraryDependencies ++= Seq(
+  "com.h2database" % "h2" % "1.3.172",
   "org.scalaz" %% "scalaz-core" % "7.0.4",
   "org.scalaz.stream" %% "scalaz-stream" % "0.3.1"
 )
