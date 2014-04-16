@@ -7,16 +7,6 @@ import Util._
 
 object Tee {
 
-  def bothTee[I]: Tee[I, I, (Option[I], Option[I])] = {
-    def go: Tee[I, I, (Option[I], Option[I])] = {
-      receiveL[I, I, (Option[I], Option[I])](l => receiveR[I, I, (Option[I], Option[I])](r => Emit(Seq((Some(l), Some(r))), go)))
-    }
-
-    go ++
-      awaitL[I].map(l => (Some(l), None)).repeat ++
-      awaitR[I].map(l => (None, Some(l))).repeat
-  }
-
   val i1: Process[Task, Instrument] = emitAll(Seq(
     Instrument(1, None, Some(100000)),
     Instrument(3, None, Some(1000)),
@@ -30,6 +20,16 @@ object Tee {
     Instrument(3, None, Some(1000)),
     Instrument(4, None, Some(666))
   ))
+
+  def bothTee[I]: Tee[I, I, (Option[I], Option[I])] = {
+    def go: Tee[I, I, (Option[I], Option[I])] = {
+      receiveL[I, I, (Option[I], Option[I])](l => receiveR[I, I, (Option[I], Option[I])](r => Emit(Seq((Some(l), Some(r))), go)))
+    }
+
+    go ++
+      awaitL[I].map(l => (Some(l), None)).repeat ++
+      awaitR[I].map(l => (None, Some(l))).repeat
+  }
 
   val pr1 = (i1 tee i2)(bothTee).map(_.toStringo) to stdOutLines
 
