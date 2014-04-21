@@ -12,11 +12,7 @@ object Comp {
 
   val pr = (readDb(Db1.connect _) tee readDb(Db2.connect _))(matchTee)
 
-  def equal(t: (Option[Instrument], Option[Instrument])): Boolean = t match {
-    case (Some(i), Some(j)) if i == j => true
-    case (None, None) => true
-    case _ => false
-  }
+  def equal(t: (Option[Instrument], Option[Instrument])): Boolean = t._1 == t._2
 
   val pr1 = pr.filter(t => !equal(t)).map(_.toStringo) to stdOutLines
 
